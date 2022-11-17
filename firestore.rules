@@ -8,7 +8,26 @@ service cloud.firestore {
 			match /produk/{produkId}{//set rule untuk produk
 				allow read, write: if request.auth.uid == uid;
 			}
-			match /kategori/{kategoriId}{//set rule untuk produk
+			match /kategori/{kategoriId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /konsumen/{konsumenId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /negara/{negaraId}{
+				allow read, write: if request.auth.uid == uid;
+
+				match /provinsi/{provinsiId}{
+					allow read, write: if request.auth.uid == uid;
+				}
+			}
+			match /provinsi/{provinsiId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /kabupaten/{kabupatenId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /kecamatan/{kecamatanId}{
 				allow read, write: if request.auth.uid == uid;
 			}
 	}

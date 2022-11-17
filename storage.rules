@@ -3,5 +3,8 @@ service firebase.storage {
     match /toko/{uid}/produk/{filename} {
       allow read, write: if request.auth.uid == uid;
     }
+    match /toko/{uid}/konsumen/{filename} {
+      allow read, write: if request.auth.uid == uid;
+    }
   }
 }

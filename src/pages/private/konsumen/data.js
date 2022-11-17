@@ -34,7 +34,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import AppPageLoading from '../../../components/AppPageLoading';
-import { currency } from '../../../utils/formatter';
 
 function DataPage({history}){
 	const classes = useStyles();
@@ -79,7 +78,7 @@ function DataPage({history}){
 	}
 
 	const { firestore, storage, user } = useFirebase();
-	const produkCol = firestore.collection(`toko/${user.uid}/produk`);//ingat yang dikurung user.uid saja
+	const dataCol = firestore.collection(`toko/${user.uid}/konsumen`);//ingat yang dikurung user.uid saja
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const handleSimpan = async e => {
@@ -91,8 +90,8 @@ function DataPage({history}){
 				setError(findErrors);
 			}else{
 				const nama = form.nama;
-				const produkBaru = await produkCol.add({nama});
-				history.push(`produk/edit/${produkBaru.id}`);//ingat kurung kurawal
+				const dataBaru = await dataCol.add({nama});
+				history.push(`konsumen/edit/${dataBaru.id}`);//ingat kurung kurawal
 			}
 
 		}catch(e){
@@ -104,23 +103,20 @@ function DataPage({history}){
 	//Section Add End
 
 	//Section Data
-	const [snapshot, loading] = useCollection(produkCol);//grab data
-	const [produkItems, setProdukItems] = useState([]);//set array kosong
+	const [snapshot, loading] = useCollection(dataCol);//grab data
+	const [Items, setItems] = useState([]);//set array kosong
 
 	useEffect(()=>{
 		if(snapshot){
-			setProdukItems(snapshot.docs);
+			setItems(snapshot.docs);
 		}
 	},[snapshot])
 
-	function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-	  return { name, calories, fat, carbs, protein };
-	}
 
-	const handleDelete = (produkDoc) => async (e) => {
+	const handleDelete = (dataDoc) => async (e) => {
 		if(window.confirm('Anda yakin mau menghapus data ini?')){
-			const fotoUrl = produkDoc.data().foto;
-			await produkDoc.ref.delete();
+			const fotoUrl = dataDoc.data().foto;
+			await dataDoc.ref.delete();
 			if(fotoUrl){
 				await storage.refFromURL(fotoUrl).delete();
 			}
@@ -134,36 +130,38 @@ function DataPage({history}){
 
 	return <>
 				{/*Section Data*/}
-				<Typography variant="h5" component="h1" paragraph>Daftar Produk</Typography>
+				<Typography variant="h5" component="h1" paragraph>Daftar Konsumen</Typography>
 
-				{produkItems.length <= 0 && 
-					<Typography>Belum ada data produk</Typography>
+				{Items.length <= 0 && 
+					<Typography>Belum ada data konsumen</Typography>
 				}
-				{produkItems.length > 0 && 
+				{Items.length > 0 && 
 				<Paper>
 					<Table className={classes.table} aria-label="simple table">
 						<TableHead>
 							<TableRow>
 								<TableCell align="left">Nama</TableCell>
-								<TableCell align="left">Kategory</TableCell>
-								<TableCell align="left">Jumlah</TableCell>
-								<TableCell align="left">Harga</TableCell>
+								<TableCell align="left">No Telpon</TableCell>
+								<TableCell align="left">Kecamatan</TableCell>
+								<TableCell align="left">Kabupaten</TableCell>
+								<TableCell align="left">Provinsi</TableCell>
 								<TableCell align="left"></TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{produkItems.map((produkDoc)=>{
-								const produkData = produkDoc.data();
+							{Items.map((dataDoc)=>{
+								const dataData = dataDoc.data();
 								return <TableRow>
-											<TableCell>{produkData.nama}</TableCell>
-											<TableCell>{produkData.kategori}</TableCell>
-											<TableCell>{produkData.stok}</TableCell>
-											<TableCell>{currency(produkData.harga)}</TableCell>
+											<TableCell>{dataData.nama}</TableCell>
+											<TableCell>{dataData.noTelpon}</TableCell>
+											<TableCell>{dataData.kecamatan}</TableCell>
+											<TableCell>{dataData.kabupaten}</TableCell>
+											<TableCell>{dataData.provinsi}</TableCell>
 											<TableCell>
-												<IconButton className={classes.edit} component={Link} to={`produk/edit/${produkDoc.id}`}>
+												<IconButton className={classes.edit} component={Link} to={`konsumen/edit/${dataDoc.id}`}>
 													<EditIcon />
 												</IconButton>
-												<IconButton className={classes.delete} onClick={handleDelete(produkDoc)}>
+												<IconButton className={classes.delete} onClick={handleDelete(dataDoc)}>
 													<DeleteIcon />
 												</IconButton>
 											</TableCell>
@@ -182,14 +180,14 @@ function DataPage({history}){
 				</Fab>
 
 				<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-			        <DialogTitle id="form-dialog-title">Buat Produk</DialogTitle>
+			        <DialogTitle id="form-dialog-title">Tambah Konsumen</DialogTitle>
 			        <DialogContent>
 			          <TextField
 			            autoFocus
 			            margin="dense"
 			            id="nama"
 			            name="nama"
-			            label="Nama Produk"
+			            label="Nama"
 			            onChange={handleChange}
 			            helperText={error.nama}
 			            error={error.nama?true:false}
