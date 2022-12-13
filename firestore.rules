@@ -14,12 +14,9 @@ service cloud.firestore {
 			match /konsumen/{konsumenId}{
 				allow read, write: if request.auth.uid == uid;
 			}
+
 			match /negara/{negaraId}{
 				allow read, write: if request.auth.uid == uid;
-
-				match /provinsi/{provinsiId}{
-					allow read, write: if request.auth.uid == uid;
-				}
 			}
 			match /provinsi/{provinsiId}{
 				allow read, write: if request.auth.uid == uid;
@@ -30,6 +27,20 @@ service cloud.firestore {
 			match /kecamatan/{kecamatanId}{
 				allow read, write: if request.auth.uid == uid;
 			}
+
+			match /transaksi/{transaksiId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /detailTransaksi/{detailTransaksiId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /detailStatusTransaksi/{detailStatusTransaksiId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+			match /detailPembayaran/{detailPembayaranId}{
+				allow read, write: if request.auth.uid == uid;
+			}
+
 	}
   }
 }

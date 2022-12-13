@@ -64,6 +64,7 @@ function EditProduk({match}){
 										harga: 0,
 										stok: 0,
 										kategori:'',
+										kategoriId:''
 									});
 
 	useEffect(()=>{
@@ -80,7 +81,8 @@ function EditProduk({match}){
 										modal: '',
 										harga: '',
 										stok: '',
-										kategori:''
+										kategori:'',
+										kategoriId:''
 									});
 
 
@@ -103,11 +105,19 @@ function EditProduk({match}){
 	const handleChangeS = (event: React.ChangeEvent<HTMLInputElement>) => {
 	    setKat(event.target.value);
 
+	    const kategoriSelected = kategoriItems.find(arr=>{
+	    	return arr.id === event.target.value;
+	    })	    
+
 	    setForm({
 			...form,
-			['kategori'] : event.target.value
+			['kategoriId'] : event.target.value,
+			['kategori'] : kategoriSelected.nama
 		})
 	};
+
+
+	console.log(form);
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSomethingChange, setIsSomethingChange] = useState(false);
@@ -178,7 +188,6 @@ function EditProduk({match}){
 
 	const validate = () => {
 		const newError = {...error};
-		console.log(form)
 		if(!form.nama){
 			newError.nama = 'Nama wajib diisi';
 		}
@@ -291,7 +300,7 @@ function EditProduk({match}){
 								label="Kategori"
 								name="kategori"
 								margin="normal"
-								value={form.kategori}
+								value={form.kategoriId}
 								onChange={handleChangeS}
 								variant="filled"
 								fullWidth
@@ -301,7 +310,7 @@ function EditProduk({match}){
 								disabled={isSubmitting}
 					        >
 						        {kategoriItems.map((katData)=>{
-						        	return <MenuItem key={katData.id} value={katData.nama}>{katData.nama}</MenuItem>
+						        	return <MenuItem key={katData.id} value={katData.id}>{katData.nama}</MenuItem>
 						        })}
 						         
 					        </TextField>

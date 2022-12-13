@@ -1,0 +1,7 @@
+- tambah konsumen
+- tambah deadline
+- laporan
+- pengaturan
+- kategori produk
+- negara, provinsi, kabupaten, kecamatan
+- export konsumen dari csv
